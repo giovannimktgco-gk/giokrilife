@@ -633,23 +633,33 @@
 </footer>
 
 <script>
+const SCRIPT_URL = "INCOLLA_QUI_IL_TUO_URL";
+
 function handleSubmit(e) {
   e.preventDefault();
   const f = e.target;
-  const nome = f.querySelector('input[placeholder="Nome"]').value;
-  const cognome = f.querySelector('input[placeholder="Cognome"]').value;
-  const email = f.querySelector('input[type="email"]').value;
-  const tel = f.querySelector('input[type="tel"]').value;
-  const area = f.querySelector('select').value;
-  const msg = f.querySelector('textarea').value;
-  const body = encodeURIComponent(
-    `Nome: ${nome} ${cognome}\nEmail: ${email}\nTelefono: ${tel}\nArea: ${area}\n\nMessaggio:\n${msg}`
-  );
-  window.location.href = `mailto:giokrilife@gmail.com?subject=Richiesta%20da%20${encodeURIComponent(nome)}&body=${body}`;
-  const btn = f.querySelector('.form-submit');
-  btn.textContent = 'Apertura email in corso ✓';
-  btn.style.background = '#2C3A52';
+
+  const data = {
+    nome: f.querySelector('input[placeholder="Nome"]').value,
+    cognome: f.querySelector('input[placeholder="Cognome"]').value,
+    email: f.querySelector('input[type="email"]').value,
+    telefono: f.querySelector('input[type="tel"]').value,
+    area: f.querySelector('select').value,
+    messaggio: f.querySelector('textarea').value
+  };
+
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(() => {
+    const btn = f.querySelector('.form-submit');
+    btn.textContent = 'Richiesta inviata ✓';
+    btn.style.background = '#2C3A52';
+    f.reset();
+  })
+  .catch(() => {
+    alert("Errore invio. Riprova.");
+  });
 }
-</script>
-</body>
-</html>
